@@ -5,11 +5,13 @@ const gameLogic = (io) => {
     io.on('connection', (socket) => {
         // User wants to start the bid
         socket.on('startBid', async (data) => {
+            console.log('startBid event received', data);
             const game = await Game.findById(data.gameId);
             // Check if it's the user's turn and they haven't already placed a bid
             if (game.turn === 0 && game.currentBidder === null) {
                 game.currentBidder = data.userId;
                 await game.save();
+                console.log(game.currentBidder)
                 io.emit('bidStarted', game);
             } else {
                 socket.emit('error', { message: 'It\'s not your turn to start the bid.' });

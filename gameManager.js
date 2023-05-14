@@ -33,6 +33,7 @@ module.exports = {
 
                 // Emit a startGame event with the game's data
                 io.emit('startGame', game);
+                io.to(game.players[0]).emit('startBid', { gameId: data.gameId });
             }
         } else {
             socket.emit('error', { message: 'Unable to join game' });
