@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const connectDB = require("./db")
 const gameManager = require('./gameManager');
 const socketIo = require('socket.io');
+const Game = require('./schemas/Game');
+const User = require('./schemas/User');
 const PORT = process.env.PORT || 5000;
 const http = require('http');
 const cors = require('cors')
@@ -67,5 +69,12 @@ io.on('connection', (socket) => {
     });
 
 });
-
+app.get('/games/:gameId', async (req, res) => {
+    try {
+        const game = await Game.findById(req.params.gameId);
+        res.json(game);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch game' });
+    }
+});
 server.listen(PORT, () => console.log(`Server listening on port:${PORT} `));
